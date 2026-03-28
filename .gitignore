@@ -1,1 +1,5 @@
 audio/
+
+# Generated video files
+lyrics-video/output/*.mp4
+lyrics-video/output/*.ass

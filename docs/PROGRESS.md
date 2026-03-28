@@ -13,7 +13,11 @@
 
 ### 第一階段：歌詞影片（可行性 90-95%）
 
-- [ ] 師弟開發歌詞影片生成模組
+- [x] 師弟開發歌詞影片生成模組 ✅
+  - `lyrics-video/lrc2ass.py` — LRC → ASS 轉換脚本
+  - `lyrics-video/generate_video.py` — 主生成脚本（整合 ffmpeg）
+  - `lyrics-video/sample.lrc` — 測試用歌詞
+  - `lyrics-video/output/test_full.mp4` — 測試影片（139.8s，4320KB）
 - [ ] T仔測試輸出品質
 - [ ] 確認歌詞內容
 
