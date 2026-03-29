@@ -526,9 +526,8 @@
             // Find current lyric line
             let newLineIndex = -1;
             for (let i = 0; i < lyrics.length; i++) {
-                if (i === lyrics.length - 1 || (lyrics[i].time <= currentTime && (i === lyrics.length - 1 || lyrics[i + 1].time > currentTime))) {
+                if (lyrics[i].time <= currentTime) {
                     newLineIndex = i;
-                    break;
                 }
             }
             
@@ -615,8 +614,9 @@
                 if (match) {
                     const mins = parseInt(match[1]);
                     const secs = parseInt(match[2]);
-                    const ms = parseInt(match[3].padEnd(2, '0'));
-                    const time = mins * 60 + secs + ms / 100;
+                    const msStr = match[3];
+                    const ms = parseInt(msStr.padEnd(3, '0'));
+                    const time = mins * 60 + secs + ms / 1000;
                     const text = line.replace(timeRegex, '').trim();
                     result.push({ time, text });
                 }
@@ -629,7 +629,7 @@
             let lrc = '';
             lyrics.forEach(line => {
                 const timeStr = formatTime(line.time);
-                lrc += `[${timeStr}]\n${line.text}\n`;
+                lrc += `[${timeStr}]${line.text}\n`;
             });
             
             const blob = new Blob([lrc], { type: 'text/plain;charset=utf-8' });
