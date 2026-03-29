@@ -87,6 +87,19 @@
         button:active {
             transform: translateY(0);
         }
+        /* File input styling */
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
         /* Lyrics List */
         .lyrics-list {
             max-height: 500px;
@@ -154,7 +167,7 @@
         .video-preview {
             position: relative;
             width: 100%;
-            padding-top: 56.25%; /* 16:9 */
+            padding-top: 56.25%;
             background: #000;
             border-radius: 8px;
             overflow: hidden;
@@ -209,20 +222,6 @@
         .instructions li {
             margin: 5px 0;
         }
-        /* Current time marker */
-        .current-time-marker {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: #ff4444;
-            pointer-events: none;
-            z-index: 10;
-        }
-        .lyric-line-wrapper {
-            position: relative;
-        }
         /* Progress bar */
         .progress-bar {
             width: 100%;
@@ -240,6 +239,25 @@
             width: 0%;
             transition: width 0.1s;
         }
+        /* Error/Status message */
+        .status-bar {
+            background: rgba(0,0,0,0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status-ok { color: #4CAF50; }
+        .status-error { color: #f44336; }
+        .status-saving { color: #2196F3; }
+        /* Auto-save indicator */
+        .autosave-indicator {
+            font-size: 0.8em;
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -249,11 +267,12 @@
         <div class="instructions">
             <h3>📖 使用說明</h3>
             <ul>
-                <li>點擊時間軸旁的按鈕，跳到該時間點</li>
-                <li>雙擊時間可直接編輯（如：00:17.00）</li>
-                <li>拖動進度條可精確調整當前位置</li>
-                <li>歌詞播放到該句時會自動高亮</li>
-                <li>完成後點擊「導出 LRC」下載檔案</li>
+                <li>點擊時間旁的 ▶️ 按鈕，跳到該時間點</li>
+                <li>點擊 📌 按鈕，將當前播放位置設為該句時間</li>
+                <li>直接點擊時間可跳到該時間</li>
+                <li>歌詞播放時會自動高亮</li>
+                <li>支援 Import LRC / 導出 LRC</li>
+                <li>自動保存到瀏覽器，關閉後再打開會恢復</li>
             </ul>
         </div>
 
@@ -263,7 +282,7 @@
                 <h2>🎧 音頻播放器</h2>
                 <div class="media-player">
                     <audio id="audioPlayer" controls>
-                        <source src="../audio/Step1_latest.m4a" type="audio/mp4">
+                        <source id="audioSource" type="audio/mp4">
                     </audio>
                     <div class="time-display">
                         <span id="currentTime">00:00.00</span>
@@ -271,6 +290,10 @@
                     </div>
                     <div class="progress-bar" id="progressBar">
                         <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="status-bar">
+                        <span id="audioStatus" class="status-ok">✅ 等待載入音頻...</span>
+                        <span class="autosave-indicator" id="autoSaveIndicator"></span>
                     </div>
                 </div>
                 
@@ -280,7 +303,11 @@
                 </div>
                 
                 <div class="export-section">
-                    <button class="export-btn" onclick="exportLRC()">📥 導出 LRC 檔案</button>
+                    <div class="file-input-wrapper">
+                        <button class="file-input">📂 Import LRC</button>
+                        <input type="file" class="file-input" accept=".lrc,.txt" onchange="importLRC(event)">
+                    </div>
+                    <button class="export-btn" onclick="exportLRC()">📥 導出 LRC</button>
                 </div>
             </div>
 
@@ -289,40 +316,41 @@
                 <h2>🎬 影片預覽</h2>
                 <div class="video-preview">
                     <video id="videoPlayer" muted>
-                        <source src="output/永活的神_v2.mp4" type="video/mp4">
+                        <source id="videoSource" type="video/mp4">
                     </video>
                     <div class="subtitle-overlay" id="subtitleOverlay">--</div>
-                    <div class="current-time-marker" id="timeMarker" style="display:none;"></div>
                 </div>
                 
                 <div class="controls">
                     <button onclick="playPause()">▶️ 播放/暫停</button>
-                    <button onclick="syncAllTimestamps()">🔄 自動同步</button>
                     <button onclick="resetTimestamps()">🔙 重置</button>
+                </div>
+                <div class="status-bar">
+                    <span id="videoStatus" class="status-ok">✅ 等待載入影片...</span>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Lyrics data with timestamps (editable)
-        let lyrics = [
+        // Default lyrics data
+        const defaultLyrics = [
             { time: 17.00, text: "永活的神來世間施恩愛" },
             { time: 24.00, text: "盼令罪人得生" },
             { time: 30.00, text: "捨性命抹去我一生淚痕" },
             { time: 38.00, text: "真愛常在我心" },
-            { time: 44.00, text: "" },  // Empty line
+            { time: 44.00, text: "" },
             { time: 54.00, text: "永活的神來世間驅黑暗" },
             { time: 60.00, text: "盼令罪人出困" },
             { time: 66.00, text: "捨性命救贖了千萬靈魂" },
             { time: 73.00, text: "恩愛永記於心坎" },
-            { time: 80.00, text: "" },  // Empty line
+            { time: 80.00, text: "" },
             { time: 90.00, text: "要頌揚神奇愛情" },
             { time: 96.00, text: "主的愛湧現我一生" },
             { time: 102.00, text: "我的手祂牽扶" },
             { time: 108.00, text: "我未嘗遇困" },
             { time: 114.00, text: "不需憂慮掛心" },
-            { time: 121.00, text: "" },  // Empty line
+            { time: 121.00, text: "" },
             { time: 131.00, text: "盼願我能常與祂相親愛" },
             { time: 137.00, text: "在這生常和祂接近" },
             { time: 143.00, text: "我願共主牽手同行" },
@@ -330,32 +358,106 @@
             { time: 157.00, text: "" }
         ];
 
+        // Storage key
+        const STORAGE_KEY = 'lyricEditor_v1';
+        
+        // Global state
+        let lyrics = [];
+        let currentLineIndex = -1;
+        let saveTimeout = null;
+        
+        // Get base path from URL
+        function getBasePath() {
+            const path = window.location.pathname;
+            const editorIndex = path.lastIndexOf('/lyrics-editor/');
+            if (editorIndex > 0) {
+                return path.substring(0, editorIndex + 1);
+            }
+            return '';
+        }
+
+        // DOM elements
         const audio = document.getElementById('audioPlayer');
         const video = document.getElementById('videoPlayer');
+        const audioSource = document.getElementById('audioSource');
+        const videoSource = document.getElementById('videoSource');
         const lyricsList = document.getElementById('lyricsList');
         const currentTimeEl = document.getElementById('currentTime');
         const durationEl = document.getElementById('duration');
         const progressFill = document.getElementById('progressFill');
         const progressBar = document.getElementById('progressBar');
         const subtitleOverlay = document.getElementById('subtitleOverlay');
+        const audioStatus = document.getElementById('audioStatus');
+        const videoStatus = document.getElementById('videoStatus');
+        const autoSaveIndicator = document.getElementById('autoSaveIndicator');
 
-        let currentLineIndex = -1;
+        // Initialize media sources
+        function initMediaSources() {
+            const base = getBasePath();
+            
+            // Audio - try multiple sources
+            const audioPath = base + 'audio/Step1_latest.m4a';
+            audioSource.src = audioPath;
+            console.log('Audio source:', audioPath);
+            
+            // Video
+            const videoPath = base + 'output/永活的神_v2.mp4';
+            videoSource.src = videoPath;
+            console.log('Video source:', videoPath);
+            
+            audio.load();
+            video.load();
+        }
 
         // Format time as MM:SS.xx
         function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00.00';
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             const ms = Math.floor((seconds % 1) * 100);
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
         }
 
-        // Parse time string to seconds
-        function parseTime(timeStr) {
-            const match = timeStr.match(/(\d+):(\d+)\.(\d+)/);
-            if (match) {
-                return parseInt(match[1]) * 60 + parseInt(match[2]) + parseInt(match[3]) / 100;
+        // Load from LocalStorage
+        function loadFromStorage() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data.lyrics && Array.isArray(data.lyrics) && data.lyrics.length > 0) {
+                        console.log('Loaded from localStorage');
+                        return data.lyrics;
+                    }
+                }
+            } catch (e) {
+                console.warn('Failed to load from storage:', e);
             }
-            return 0;
+            return null;
+        }
+
+        // Save to LocalStorage
+        function saveToStorage() {
+            try {
+                const data = { lyrics: lyrics, savedAt: Date.now() };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                showAutoSaveIndicator();
+            } catch (e) {
+                console.warn('Failed to save to storage:', e);
+            }
+        }
+
+        // Debounced save
+        function debouncedSave() {
+            if (saveTimeout) clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveToStorage, 1000);
+        }
+
+        // Show auto-save indicator
+        function showAutoSaveIndicator() {
+            autoSaveIndicator.textContent = '✓ 已保存 ' + new Date().toLocaleTimeString();
+            setTimeout(() => {
+                autoSaveIndicator.textContent = '';
+            }, 3000);
         }
 
         // Render lyrics list
@@ -368,18 +470,13 @@
                 
                 if (line.text === '') {
                     div.innerHTML = `
-                        <span class="timestamp">--:--:--</span>
+                        <span class="timestamp">--:--</span>
                         <span class="lyric-text" style="color: #888; font-style: italic;">（空白）</span>
                     `;
                 } else {
                     div.innerHTML = `
-                        <span class="timestamp" 
-                            onclick="seekTo(${index})" 
-                            title="點擊跳到該時間"
-                            style="cursor: pointer;">${formatTime(line.time)}</span>
-                        <input type="text" class="lyric-text-input" value="${line.text}" 
-                            onchange="updateLyricText(${index}, this.value)"
-                            style="flex:1; margin-left:15px; background:transparent; border:none; border-bottom:1px dashed #666; color:white; font-size:1.1em; outline:none;">
+                        <span class="timestamp" onclick="seekTo(${index})" title="點擊跳到該時間" style="cursor: pointer; color: #ffd700;">${formatTime(line.time)}</span>
+                        <span class="lyric-text">${escapeHtml(line.text)}</span>
                         <button class="seek-btn" onclick="seekTo(${index})">▶️</button>
                         <button class="seek-btn" onclick="setCurrentTimeToLine(${index})" style="background:#2196F3;">📌</button>
                     `;
@@ -389,17 +486,20 @@
             });
         }
 
-        // Update lyric text
-        function updateLyricText(index, text) {
-            lyrics[index].text = text;
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         // Seek to specific lyric time
         function seekTo(index) {
+            if (index < 0 || index >= lyrics.length) return;
             const time = lyrics[index].time;
             audio.currentTime = time;
             video.currentTime = time;
-            audio.play();
+            audio.play().catch(() => {});
         }
 
         // Set current time to this line
@@ -408,6 +508,8 @@
             lyrics[index].time = currentTime;
             renderLyrics();
             updateSubtitle();
+            debouncedSave();
+            showAutoSaveIndicator();
         }
 
         // Update progress bar and current line
@@ -458,25 +560,68 @@
         // Play/Pause
         function playPause() {
             if (audio.paused) {
-                audio.play();
-                video.play();
+                audio.play().catch(() => {});
+                video.play().catch(() => {});
             } else {
                 audio.pause();
                 video.pause();
             }
         }
 
-        // Sync all timestamps (simple adjustment)
-        function syncAllTimestamps() {
-            // This would use Whisper data to re-sync
-            alert('請手動調整每句時間，或導入 Whisper 生成的時間軸');
-        }
-
         // Reset timestamps
         function resetTimestamps() {
-            if (confirm('確定要重置所有時間軸嗎？')) {
-                location.reload();
+            if (confirm('確定要重置所有時間軸嗎？（不包括歌詞內容）')) {
+                lyrics = defaultLyrics.map(l => ({ ...l }));
+                renderLyrics();
+                saveToStorage();
+                showAutoSaveIndicator();
             }
+        }
+
+        // Import LRC file
+        function importLRC(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                const parsed = parseLRC(content);
+                if (parsed.length > 0) {
+                    lyrics = parsed;
+                    renderLyrics();
+                    saveToStorage();
+                    showAutoSaveIndicator();
+                    alert(`成功導入 ${lyrics.length} 行歌詞！`);
+                } else {
+                    alert('無法解析 LRC 檔案，請確認格式正確。');
+                }
+            };
+            reader.onerror = function() {
+                alert('讀取檔案失敗。');
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // Parse LRC content
+        function parseLRC(content) {
+            const lines = content.split('\n');
+            const result = [];
+            const timeRegex = /\[(\d{2}):(\d{2})\.(\d{2,3})\]/;
+            
+            for (const line of lines) {
+                const match = line.match(timeRegex);
+                if (match) {
+                    const mins = parseInt(match[1]);
+                    const secs = parseInt(match[2]);
+                    const ms = parseInt(match[3].padEnd(2, '0'));
+                    const time = mins * 60 + secs + ms / 100;
+                    const text = line.replace(timeRegex, '').trim();
+                    result.push({ time, text });
+                }
+            }
+            return result;
         }
 
         // Export LRC file
@@ -487,11 +632,11 @@
                 lrc += `[${timeStr}]\n${line.text}\n`;
             });
             
-            const blob = new Blob([lrc], { type: 'text/plain' });
+            const blob = new Blob([lrc], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = '永活的神_final.lrc';
+            a.download = 'lyrics_final.lrc';
             a.click();
             URL.revokeObjectURL(url);
         }
@@ -501,8 +646,31 @@
             const rect = progressBar.getBoundingClientRect();
             const percent = (e.clientX - rect.left) / rect.width;
             const time = percent * audio.duration;
-            audio.currentTime = time;
-            video.currentTime = time;
+            if (!isNaN(time)) {
+                audio.currentTime = time;
+                video.currentTime = time;
+            }
+        });
+
+        // Error handlers
+        audio.addEventListener('error', () => {
+            audioStatus.textContent = '❌ 音頻載入失敗';
+            audioStatus.className = 'status-error';
+        });
+
+        audio.addEventListener('canplay', () => {
+            audioStatus.textContent = '✅ 音頻已就緒';
+            audioStatus.className = 'status-ok';
+        });
+
+        video.addEventListener('error', () => {
+            videoStatus.textContent = '❌ 影片載入失敗';
+            videoStatus.className = 'status-error';
+        });
+
+        video.addEventListener('canplay', () => {
+            videoStatus.textContent = '✅ 影片已就緒';
+            videoStatus.className = 'status-ok';
         });
 
         // Sync audio and video
@@ -525,24 +693,32 @@
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
+            if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
                 e.preventDefault();
                 playPause();
             } else if (e.code === 'ArrowLeft') {
-                audio.currentTime -= 5;
+                audio.currentTime = Math.max(0, audio.currentTime - 5);
             } else if (e.code === 'ArrowRight') {
-                audio.currentTime += 5;
+                audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
             }
         });
 
         // Initialize
-        renderLyrics();
-        audio.addEventListener('timeupdate', updateProgress);
+        function init() {
+            // Try to load from storage first
+            const savedLyrics = loadFromStorage();
+            lyrics = savedLyrics || defaultLyrics.map(l => ({ ...l }));
+            
+            initMediaSources();
+            renderLyrics();
+            
+            // Show restore message if loaded from storage
+            if (savedLyrics) {
+                autoSaveIndicator.textContent = '✓ 已恢復之前的編輯';
+            }
+        }
         
-        // Try to load video
-        video.addEventListener('loadeddata', () => {
-            console.log('Video loaded');
-        });
+        init();
     </script>
 </body>
 </html>
