@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>復活的光 — Song of Songs</title>
   <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .tab-container { margin: 16px 0; }
+    .tab-buttons { display: flex; gap: 8px; margin-bottom: 12px; }
+    .tab-btn { padding: 8px 16px; border: 1px solid #ddd; background: #f5f5f5; cursor: pointer; border-radius: 4px; }
+    .tab-btn.active { background: #222; color: #fff; border-color: #222; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
 </head>
 <body>
   <header>
@@ -27,8 +35,123 @@
       </div>
     </section>
 
-    <section id="lyrics">
-      <pre id="lyricsText">
+    <div class="tab-container">
+      <div class="tab-buttons">
+        <button class="tab-btn active" onclick="showTab('v1')">📜 粵語版（舊）</button>
+        <button class="tab-btn" onclick="showTab('v2')">✨ 普通話版（新）</button>
+      </div>
+
+      <!-- 粵語版（舊版） -->
+      <div id="v1" class="tab-content active">
+        <section id="lyrics-v1">
+          <pre id="lyricsText-v1">
+【第一段】
+沉睡的大地
+萬物甦醒齊聲歡呼
+比你創立天地
+還要更大的喜樂
+
+你說有光就有光
+星辰節令為愛運轉
+一切都是你手所立
+只為今日這榮耀早晨
+
+【副歌】
+復活的主要你興起發光
+耶和華的榮耀發現照耀
+我是世界的光
+黑暗卻不能勝過
+你牽我離開那寒冷黑夜
+進入你永遠愛的春天
+你牽我離開那寒冷黑夜
+進入你永遠愛的春天
+
+【第二段】
+你用話語托住萬有
+你用慈愛編織宇宙
+復活的喜樂勝過起初
+新的創造新的自由
+
+一切星辰都為你歡呼
+節令更迭述說你恩典
+萬物都在復活晨光中
+看見永遠愛的春天
+
+【副歌】
+復活的主要你興起發光
+耶和華的榮耀發現照耀
+我是世界的光
+黑暗卻不能勝過
+你牽我離開那寒冷黑夜
+進入你永遠愛的春天
+你牽我離開那寒冷黑夜
+進入你永遠愛的春天
+
+【橋段】
+永遠的愛不變的應許
+你用復活開闘新天地
+我不再懼怕黑夜寒冬
+因你是我永恆的春天
+
+【終結副歌】
+復活的主要你興起發光
+耶和華的榮耀發現照耀
+我是世界的光
+黑暗卻不能勝過
+你牽我離開那寒冷黑夜
+進入你永遠愛的春天
+你牽我離開那寒冷黑夜
+進入你永遠愛的春天
+永遠愛的春天
+          </pre>
+        </section>
+
+        <section id="marks-v1">
+          <h3>Marked timestamps</h3>
+          <ol id="marksList-v1">
+            <li>0:00 — 【第一段】</li>
+            <li>0:06 — 沉睡的大地</li>
+            <li>0:12 — 萬物甦醒齊聲歡呼</li>
+            <li>0:18 — 比你創立天地</li>
+            <li>0:24 — 還要更大的喜樂</li>
+            <li>0:30 — 你說有光就有光</li>
+            <li>0:36 — 星辰節令為愛運轉</li>
+            <li>0:42 — 一切都是你手所立</li>
+            <li>0:48 — 只為今日這榮耀早晨</li>
+            <li>0:54 — 【副歌】</li>
+            <li>1:00 — 復活的主要你興起發光</li>
+            <li>1:06 — 耶和華的榮耀發現照耀</li>
+            <li>1:12 — 我是世界的光</li>
+            <li>1:18 — 黑暗卻不能勝過</li>
+            <li>1:24 — 你牽我離開那寒冷黑夜</li>
+            <li>1:30 — 進入你永遠愛的春天</li>
+            <li>1:36 — 你牽我離開那寒冷黑夜</li>
+            <li>1:42 — 進入你永遠愛的春天</li>
+            <li>1:48 — 【第二段】</li>
+            <li>1:54 — 你用話語托住萬有</li>
+            <li>2:00 — 你用慈愛編織宇宙</li>
+            <li>2:06 — 復活的喜樂勝過起初</li>
+            <li>2:12 — 新的創造新的自由</li>
+            <li>2:18 — 一切星辰都為你歡呼</li>
+            <li>2:24 — 節令更迭述說你恩典</li>
+            <li>2:30 — 萬物都在復活晨光中</li>
+            <li>2:36 — 看見永遠愛的春天</li>
+            <li>2:42 — 【副歌】</li>
+            <li>2:48 — 復活的主要你興起發光</li>
+            <li>2:54 — 耶和華的榮耀發現照耀</li>
+            <li>3:00 — 我是世界的光</li>
+            <li>3:06 — 黑暗卻不能勝過</li>
+            <li>3:12 — 你牽我離開那寒冷黑夜</li>
+            <li>3:18 — 進入你永遠愛的春天</li>
+            <li>3:24 — 永遠愛的春天</li>
+          </ol>
+        </section>
+      </div>
+
+      <!-- 普通話版（新版） -->
+      <div id="v2" class="tab-content">
+        <section id="lyrics-v2">
+          <pre id="lyricsText-v2">
 【前奏】instrumental
 
 【第一段】
@@ -86,65 +209,75 @@
 
 【尾聲】
 永恆的春天
-      </pre>
-    </section>
+          </pre>
+        </section>
 
-    <section id="marks">
-      <h3>Marked timestamps</h3>
-      <ol id="marksList">
-        <li>0:00 — 【前奏】instrumental</li>
-        <li>0:15 — 【第一段】</li>
-        <li>0:21 — 萬物甦醒，大地回春</li>
-        <li>0:27 — 春風吹拂，暖意漸臨</li>
-        <li>0:33 — 你將寒冬，化作溫存</li>
-        <li>0:39 — 黑暗退去，光明現身</li>
-        <li>0:45 — 萬有皆從你手而立</li>
-        <li>0:51 — 星辰節令，你定規矩</li>
-        <li>0:57 — 一切為你，復活預備</li>
-        <li>1:03 — 【副歌】</li>
-        <li>1:09 — 興起，發光！因你的光已來</li>
-        <li>1:15 — 照亮黑暗，驅散陰霾</li>
-        <li>1:21 — 你是世界的光，恆的愛</li>
-        <li>1:27 — 跟隨你腳步，不再徘徊</li>
-        <li>1:33 — 從死亡權勢，得釋放</li>
-        <li>1:39 — 進入你豐盛的恩典，得安穩</li>
-        <li>1:45 — 因你復活，生命更新</li>
-        <li>1:51 — 我們高聲讚美，因你得勝</li>
-        <li>1:57 — 【第二段】</li>
-        <li>2:03 — 昔日坟墓，如今空虛</li>
-        <li>2:09 — 死亡鎖鏈，已被除去</li>
-        <li>2:15 — 你勝過一切，大能無比</li>
-        <li>2:21 — 愛的光芒，永不熄</li>
-        <li>2:27 — 從沉睡之中，被你喚醒</li>
-        <li>2:33 — 進入應許之地，得安寧</li>
-        <li>2:39 — 【副歌】</li>
-        <li>2:45 — 興起，發光！因你的光已來</li>
-        <li>2:51 — 照亮黑暗，驅散陰霾</li>
-        <li>2:57 — 你是世界的光，恆的愛</li>
-        <li>3:03 — 跟隨你腳步，不再徘徊</li>
-        <li>3:09 — 從死亡權勢，得釋放</li>
-        <li>3:15 — 進入你豐盛的恩典，得安穩</li>
-        <li>3:21 — 因你復活，生命更新</li>
-        <li>3:27 — 我們高聲讚美，因你得勝</li>
-        <li>3:33 — 【橋段】</li>
-        <li>3:39 — 你說「要有光」，就有光</li>
-        <li>3:45 — 你創造天地，萬物頌揚</li>
-        <li>3:51 — 比創世之初，更顯輝煌</li>
-        <li>3:57 — 你帶我出黑暗，進入永恆的春天</li>
-        <li>4:03 — 【終結副歌】</li>
-        <li>4:09 — 興起，發光！因你的光已來</li>
-        <li>4:15 — 照亮黑暗，驅散陰霾</li>
-        <li>4:21 — 你是世界的光，恆的愛</li>
-        <li>4:27 — 跟隨你腳步，不再徘徊</li>
-        <li>4:33 — 從死亡權勢，得釋放</li>
-        <li>4:39 — 進入你豐盛的恩典，得安穩</li>
-        <li>4:45 — 因你復活，生命更新</li>
-        <li>4:51 — 我們高聲讚美，因你得勝</li>
-        <li>4:57 — 永恆的春天</li>
-      </ol>
-    </section>
+        <section id="marks-v2">
+          <h3>Marked timestamps</h3>
+          <ol id="marksList-v2">
+            <li>0:00 — 【前奏】instrumental</li>
+            <li>0:15 — 【第一段】</li>
+            <li>0:21 — 萬物甦醒，大地回春</li>
+            <li>0:27 — 春風吹拂，暖意漸臨</li>
+            <li>0:33 — 你將寒冬，化作溫存</li>
+            <li>0:39 — 黑暗退去，光明現身</li>
+            <li>0:45 — 萬有皆從你手而立</li>
+            <li>0:51 — 星辰節令，你定規矩</li>
+            <li>0:57 — 一切為你，復活預備</li>
+            <li>1:03 — 【副歌】</li>
+            <li>1:09 — 興起，發光！因你的光已來</li>
+            <li>1:15 — 照亮黑暗，驅散陰霾</li>
+            <li>1:21 — 你是世界的光，恆的愛</li>
+            <li>1:27 — 跟隨你腳步，不再徘徊</li>
+            <li>1:33 — 從死亡權勢，得釋放</li>
+            <li>1:39 — 進入你豐盛的恩典，得安穩</li>
+            <li>1:45 — 因你復活，生命更新</li>
+            <li>1:51 — 我們高聲讚美，因你得勝</li>
+            <li>1:57 — 【第二段】</li>
+            <li>2:03 — 昔日坟墓，如今空虛</li>
+            <li>2:09 — 死亡鎖鏈，已被除去</li>
+            <li>2:15 — 你勝過一切，大能無比</li>
+            <li>2:21 — 愛的光芒，永不熄</li>
+            <li>2:27 — 從沉睡之中，被你喚醒</li>
+            <li>2:33 — 進入應許之地，得安寧</li>
+            <li>2:39 — 【副歌】</li>
+            <li>2:45 — 興起，發光！因你的光已來</li>
+            <li>2:51 — 照亮黑暗，驅散陰霾</li>
+            <li>2:57 — 你是世界的光，恆的愛</li>
+            <li>3:03 — 跟隨你腳步，不再徘徊</li>
+            <li>3:09 — 從死亡權勢，得釋放</li>
+            <li>3:15 — 進入你豐盛的恩典，得安穩</li>
+            <li>3:21 — 因你復活，生命更新</li>
+            <li>3:27 — 我們高聲讚美，因你得勝</li>
+            <li>3:33 — 【橋段】</li>
+            <li>3:39 — 你說「要有光」，就有光</li>
+            <li>3:45 — 你創造天地，萬物頌揚</li>
+            <li>3:51 — 比創世之初，更顯輝煌</li>
+            <li>3:57 — 你帶我出黑暗，進入永恆的春天</li>
+            <li>4:03 — 【終結副歌】</li>
+            <li>4:09 — 興起，發光！因你的光已來</li>
+            <li>4:15 — 照亮黑暗，驅散陰霾</li>
+            <li>4:21 — 你是世界的光，恆的愛</li>
+            <li>4:27 — 跟隨你腳步，不再徘徊</li>
+            <li>4:33 — 從死亡權勢，得釋放</li>
+            <li>4:39 — 進入你豐盛的恩典，得安穩</li>
+            <li>4:45 — 因你復活，生命更新</li>
+            <li>4:51 — 我們高聲讚美，因你得勝</li>
+            <li>4:57 — 永恆的春天</li>
+          </ol>
+        </section>
+      </div>
+    </div>
   </main>
 
   <script src="../assets/js/lyrics-timeline.js"></script>
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      document.querySelector(`.tab-btn[onclick="showTab('${tabId}')"]`).classList.add('active');
+    }
+  </script>
 </body>
 </html>
