@@ -5,133 +5,80 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>復活的光 — Song of Songs</title>
   <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .container{display:grid;grid-template-columns:1fr 2fr 1fr;grid-template-rows:auto 1fr auto;gap:16px;align-items:start}
+    header.audio{grid-column:1/4}
+    .left{padding:12px;background:#fafafa;border:1px solid #eee}
+    .right{padding:12px;background:#fafafa;border:1px solid #eee}
+    .center{padding:12px}
+    table.lyrics{width:100%;border-collapse:collapse}
+    table.lyrics td{border-bottom:1px solid #eee;padding:8px;vertical-align:top}
+    .time{width:110px;color:#666;font-family:monospace}
+    footer.meta{grid-column:1/4;padding-top:12px;color:#666;font-size:0.9rem}
+    pre.prompt{white-space:pre-wrap;font-size:0.95rem}
+  </style>
 </head>
 <body>
-  <header>
-    <h1>復活的光</h1>
-    <p class="meta">Tempo: 72 BPM • Key: G • Duration: ~3:15</p>
-    <p class="meta">聖經參考：以賽亞書六十1、約翰福音八12、一5</p>
-  </header>
-  <main>
-    <section id="player">
-      <audio id="audio" controls>
-        <source src="../assets/audio/revival-of-light.mp3" type="audio/mpeg">
-        <source src="../assets/audio/revival-of-light.mp3" type="audio/mp3">
-        你的瀏覽器不支援音訊播放。
-      </audio>
-      <p>或者上傳其他音訊檔：<input type="file" id="audioFile" accept="audio/*"></p>
-      <div class="controls">
-        <button id="startMark">Start Marking</button>
-        <button id="mark">Mark Timestamp</button>
-        <button id="exportLRC">Export LRC</button>
-      </div>
+  <h1>復活的光</h1>
+  <div class="container">
+    <div class="audio header">
+      <audio id="audio" controls src="../assets/audio/revival-of-light.mp3" style="width:100%"></audio>
+    </div>
+
+    <aside class="left">
+      <h3>Prompt（供參考）</h3>
+      <pre class="prompt">使用下列種子與要求生成完整的繁體中文詩歌歌詞。
+
+種子歌詞（原文，請用作靈感，不要逐字複製）：
+萬物都要因你復活歡呼，比創立天地更讓萬物高興。萬有都是你做，你說有光就有光，星辰、節令都是你所立，一切都為你復活預備。你帶我離開黑夜、寒冬，進入永遠愛的春天。
+
+要求：
+- 生成繁體中文歌詞，主題為復活節、復活的光（基督教敬拜）。
+- 風格：抒情、敬拜，適合會眾跟唱。
+- 必須包含聖經意象或直接引述：以賽亞書 60:1 (「興起，發光！因為你的光已來」) 與 約翰福音 8:12 (「我就是世界的光」)。
+- 歌詞結構：Intro, Verse1, Chorus (副歌, 8 行), Verse2, Chorus, Bridge, Final Chorus, Outro.
+</pre>
+    </aside>
+
+    <section class="center">
+      <h3>歌詞時間表</h3>
+      <table class="lyrics" id="lyricsTable">
+        <tbody>
+        </tbody>
+      </table>
     </section>
 
-    <section id="lyrics">
-      <pre id="lyricsText">
-【第一段】
-沉睡的大地
-萬物甦醒齊聲歡呼
-比你創立天地
-還要更大的喜樂
+    <aside class="right">
+      <h3>聖經經文</h3>
+      <p><strong>以賽亞書 60:1（和合本）</strong><br>興起！發光！因為你的光已來，耶和華的榮耀發現照耀你。</p>
+      <p><strong>約翰福音 8:12（和合本）</strong><br>耶穌又對眾人說：「我就是世上的光。跟從我的，就不在黑暗裡走，必要得著生命的光。」</p>
+    </aside>
 
-你說有光就有光
-星辰節令為愛運轉
-一切都是你手所立
-只為今日這榮耀早晨
+    <footer class="meta">
+      <p>歌名：復活的光 · 生成器：MiniMax Lyric API · 風格：抒情/敬拜 · Key: G · Tempo: 72 BPM · 長度：約3:15</p>
+    </footer>
+  </div>
 
-【副歌】
-復活的主要你興起發光
-耶和華的榮耀發現照耀
-我是世界的光
-黑暗卻不能勝過
-你牽我離開那寒冷黑夜
-進入你永遠愛的春天
-你牽我離開那寒冷黑夜
-進入你永遠愛的春天
-
-【第二段】
-你用話語托住萬有
-你用慈愛編織宇宙
-復活的喜樂勝過起初
-新的創造新的自由
-
-一切星辰都為你歡呼
-節令更迭述說你恩典
-萬物都在復活晨光中
-看見永遠愛的春天
-
-【副歌】
-復活的主要你興起發光
-耶和華的榮耀發現照耀
-我是世界的光
-黑暗卻不能勝過
-你牽我離開那寒冷黑夜
-進入你永遠愛的春天
-你牽我離開那寒冷黑夜
-進入你永遠愛的春天
-
-【橋段】
-永遠的愛不變的應許
-你用復活開闘新天地
-我不再懼怕黑夜寒冬
-因你是我永恆的春天
-
-【終結副歌】
-復活的主要你興起發光
-耶和華的榮耀發現照耀
-我是世界的光
-黑暗卻不能勝過
-你牽我離開那寒冷黑夜
-進入你永遠愛的春天
-你牽我離開那寒冷黑夜
-進入你永遠愛的春天
-永遠愛的春天
-      </pre>
-    </section>
-
-    <section id="marks">
-      <h3>Marked timestamps</h3>
-      <ol id="marksList">
-        <li>0:00 — 【第一段】</li>
-        <li>0:06 — 沉睡的大地</li>
-        <li>0:12 — 萬物甦醒齊聲歡呼</li>
-        <li>0:18 — 比你創立天地</li>
-        <li>0:24 — 還要更大的喜樂</li>
-        <li>0:30 — 你說有光就有光</li>
-        <li>0:36 — 星辰節令為愛運轉</li>
-        <li>0:42 — 一切都是你手所立</li>
-        <li>0:48 — 只為今日這榮耀早晨</li>
-        <li>0:54 — 【副歌】</li>
-        <li>1:00 — 復活的主要你興起發光</li>
-        <li>1:06 — 耶和華的榮耀發現照耀</li>
-        <li>1:12 — 我是世界的光</li>
-        <li>1:18 — 黑暗卻不能勝過</li>
-        <li>1:24 — 你牽我離開那寒冷黑夜</li>
-        <li>1:30 — 進入你永遠愛的春天</li>
-        <li>1:36 — 你牽我離開那寒冷黑夜</li>
-        <li>1:42 — 進入你永遠愛的春天</li>
-        <li>1:48 — 【第二段】</li>
-        <li>1:54 — 你用話語托住萬有</li>
-        <li>2:00 — 你用慈愛編織宇宙</li>
-        <li>2:06 — 復活的喜樂勝過起初</li>
-        <li>2:12 — 新的創造新的自由</li>
-        <li>2:18 — 一切星辰都為你歡呼</li>
-        <li>2:24 — 節令更迭述說你恩典</li>
-        <li>2:30 — 萬物都在復活晨光中</li>
-        <li>2:36 — 看見永遠愛的春天</li>
-        <li>2:42 — 【副歌】</li>
-        <li>2:48 — 復活的主要你興起發光</li>
-        <li>2:54 — 耶和華的榮耀發現照耀</li>
-        <li>3:00 — 我是世界的光</li>
-        <li>3:06 — 黑暗卻不能勝過</li>
-        <li>3:12 — 你牽我離開那寒冷黑夜</li>
-        <li>3:18 — 進入你永遠愛的春天</li>
-        <li>3:24 — 永遠愛的春天</li>
-      </ol>
-    </section>
-  </main>
-
-  <script src="../assets/js/lyrics-timeline.js"></script>
+  <script>
+    // load lrc and populate table
+    async function loadLRC(){
+      const resp = await fetch('../assets/songs/revival-of-light.lrc');
+      const text = await resp.text();
+      const lines = text.split(/\r?\n/).filter(Boolean);
+      const tbody = document.querySelector('#lyricsTable tbody');
+      for(const line of lines){
+        const m = line.match(/^\[(\d{2}):(\d{2})\.(\d{2})\](.*)$/);
+        if(m){
+          const mm = m[1], ss = m[2], cs = m[3], lyric = m[4];
+          const tr = document.createElement('tr');
+          const tdTime = document.createElement('td'); tdTime.className='time'; tdTime.textContent = mm+':'+ss+'.'+cs;
+          const tdLyric = document.createElement('td'); tdLyric.textContent = lyric;
+          tr.appendChild(tdTime); tr.appendChild(tdLyric);
+          tbody.appendChild(tr);
+        }
+      }
+    }
+    loadLRC().catch(e=>console.error(e));
+  </script>
 </body>
 </html>
