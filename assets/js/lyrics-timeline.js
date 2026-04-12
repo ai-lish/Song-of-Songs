@@ -18,6 +18,17 @@
   let marking = false;
   let marks = []; // {time, text}
   let currentRowIndex = 0;
+  let lastActiveIndex = -1;
+
+  // Check if audio source is loaded
+  function hasAudioSource() {
+    return !!(
+      audio &&
+      (audio.currentSrc ||
+        (audioInput && audioInput.files && audioInput.files.length > 0) ||
+        audio.readyState > 0)
+    );
+  }
 
   // Get all lyric rows (excluding section headers which have no pin button)
   function getLyricRows() {
@@ -41,38 +52,64 @@
 
   // Update real-time lyric display and table highlight
   function updateCurrentLyric() {
-    if (!audio.src && !audioInput.files[0]) {
+    // If no audio source loaded, show hint and skip
+    if (!hasAudioSource()) {
       currentLyricText.textContent = '按下播放開始...';
       return;
     }
 
     const currentTime = audio.currentTime;
     const rows = getLyricRows();
+    if (!rows || rows.length === 0) {
+      currentLyricText.textContent = '';
+      return;
+    }
 
-    // Find the current row based on time
-    let activeRow = rows[0];
-    for (const row of rows) {
-      const rowTime = parseFloat(row.dataset.time);
-      if (currentTime >= rowTime) {
-        activeRow = row;
-      } else {
+    // Build array of {row, time} with valid numeric time
+    const timedRows = rows.map((row, idx) => {
+      const t = parseFloat(row.dataset.time);
+      return { row, time: isFinite(t) ? t : null, idx };
+    });
+
+    // Sort by time (nulls last, maintain original order for equal times)
+    timedRows.sort((a, b) => {
+      if (a.time === null && b.time === null) return a.idx - b.idx;
+      if (a.time === null) return 1;
+      if (b.time === null) return -1;
+      return a.time - b.time;
+    });
+
+    // Find last row whose time <= currentTime
+    let activeIndex = -1;
+    for (let i = 0; i < timedRows.length; i++) {
+      if (timedRows[i].time !== null && currentTime >= timedRows[i].time) {
+        activeIndex = i;
+      } else if (timedRows[i].time !== null && currentTime < timedRows[i].time) {
         break;
       }
     }
 
-    // Update table highlight
-    rows.forEach(row => row.classList.remove('current'));
-    activeRow.classList.add('current');
+    // Fallback to first row if none found
+    if (activeIndex < 0 && timedRows[0].time !== null) {
+      activeIndex = 0;
+    }
 
-    // Scroll into view
-    activeRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const activeRow = timedRows[activeIndex >= 0 ? activeIndex : 0].row;
 
-    // Update display
-    const lyricText = activeRow.querySelector('td:nth-child(2)').textContent;
-    currentLyricText.textContent = lyricText;
+    // Only update DOM when active row changed
+    if (lastActiveIndex !== activeIndex) {
+      rows.forEach(r => r.classList.remove('current'));
+      activeRow.classList.add('current');
 
-    // Update mark button state
-    currentRowIndex = rows.indexOf(activeRow);
+      // Scroll only when changed (instant, not smooth)
+      activeRow.scrollIntoView({ behavior: 'auto', block: 'center' });
+
+      const lyricText = activeRow.querySelector('td:nth-child(2)').textContent || '';
+      currentLyricText.textContent = lyricText;
+
+      currentRowIndex = rows.indexOf(activeRow);
+      lastActiveIndex = activeIndex;
+    }
   }
 
   // Set up audio file input
@@ -83,6 +120,7 @@
     audio.src = url;
     marks = []; // Reset marks when new file loaded
     marksList.innerHTML = '';
+    lastActiveIndex = -1; // Reset highlight state
   });
 
   // Audio timeupdate event for real-time highlighting
@@ -98,7 +136,7 @@
 
   // Mark current lyric timestamp
   markBtn.addEventListener('click', () => {
-    if (!audio.src && !audioInput.files[0]) {
+    if (!hasAudioSource()) {
       alert('請先載入音訊檔');
       return;
     }
@@ -106,14 +144,7 @@
     const rows = getLyricRows();
     if (rows.length === 0) return;
 
-    // If marking mode, mark sequentially; otherwise mark current line
-    let targetRow;
-    if (marking) {
-      targetRow = rows[Math.min(currentRowIndex, rows.length - 1)];
-    } else {
-      targetRow = rows[Math.min(currentRowIndex, rows.length - 1)];
-    }
-
+    const targetRow = rows[Math.min(currentRowIndex, rows.length - 1)];
     const t = audio.currentTime;
     const lyric = targetRow.querySelector('td:nth-child(2)').textContent;
     const timeCell = targetRow.querySelector('td.time');
@@ -145,7 +176,7 @@
   // Pin button click - set this row's time to current audio position
   document.querySelectorAll('.pin-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      if (!audio.src && !audioInput.files[0]) {
+      if (!hasAudioSource()) {
         alert('請先播放音訊');
         return;
       }
@@ -167,7 +198,6 @@
       const existingIndex = marks.findIndex(m => m.text === lyric);
       if (existingIndex >= 0) {
         marks[existingIndex].time = t;
-        // Update marks list
         const listItems = marksList.querySelectorAll('li');
         listItems[existingIndex].textContent = `[${formatTime(t)}] ${lyric}`;
       } else {
@@ -198,7 +228,9 @@
     rows.forEach(row => {
       const time = parseFloat(row.dataset.time);
       const text = row.querySelector('td:nth-child(2)').textContent;
-      allLines.push({ time, text });
+      if (isFinite(time)) {
+        allLines.push({ time, text });
+      }
     });
 
     // Sort by time
@@ -222,6 +254,7 @@
     if (!confirm('確定要重置所有標記？')) return;
     marks = [];
     marksList.innerHTML = '';
+    lastActiveIndex = -1;
     document.querySelectorAll('.pin-btn').forEach(btn => {
       btn.classList.remove('pinned');
       btn.textContent = '📌 扣';
@@ -239,7 +272,7 @@
     const time = parseFloat(row.dataset.time);
     if (isNaN(time)) return;
 
-    if (audio.src || audioInput.files[0]) {
+    if (hasAudioSource()) {
       audio.currentTime = time;
       audio.play();
     }
