@@ -1,9 +1,11 @@
-// Lyrics Timeline Helper
+// Lyrics Timeline Helper with MV Image Display
 // Features:
 //  - Real-time lyric highlighting based on audio playback
+//  - MV images change according to current time
 //  - Pin button to set/update timestamp for each lyric line
 //  - Mark timestamps for unmarked lines
 //  - Export to LRC format
+//  - NO auto-scroll of lyrics table (highlight stays in place)
 (() => {
   const audioInput = document.getElementById('audioFile');
   const audio = document.getElementById('audio');
@@ -14,11 +16,34 @@
   const marksList = document.getElementById('marksList');
   const currentLyricText = document.getElementById('currentLyricText');
   const lyricsTable = document.getElementById('lyricsTable');
+  const mvImage = document.getElementById('mvImage');
+  const mvImageNum = document.getElementById('mvImageNum');
 
   let marking = false;
   let marks = []; // {time, text}
   let currentRowIndex = 0;
   let lastActiveIndex = -1;
+  let lastImageIndex = -1;
+
+  // MV Image URLs (16 images mapped to time ranges)
+  const mvImages = [
+    { num: 1,  timeStart: 0,   timeEnd: 13.51,  url: 'https://drive.google.com/thumbnail?id=1myFrILUI4kYwb1LnDgPHzzBKWFqJkP-m&sz=w1920' },
+    { num: 2,  timeStart: 13.51, timeEnd: 20.18, url: 'https://drive.google.com/thumbnail?id=1EOwdJxREgJWyuEmvrznz24Z0aGCJNx55&sz=w1920' },
+    { num: 3,  timeStart: 20.18, timeEnd: 26.28, url: 'https://drive.google.com/thumbnail?id=18eFW2KDfW2Gn66t8YZoI21evQuBSXyS-&sz=w1920' },
+    { num: 4,  timeStart: 26.28, timeEnd: 32.05, url: 'https://drive.google.com/thumbnail?id=1FLRaV6Du450SHS1qFnO3oHI-sg55j8k_&sz=w1920' },
+    { num: 5,  timeStart: 32.05, timeEnd: 38.86, url: 'https://drive.google.com/thumbnail?id=1s8yqFGy_41yCeFpARPnbFLx9F4sUp_tf&sz=w1920' },
+    { num: 6,  timeStart: 38.86, timeEnd: 43.74, url: 'https://drive.google.com/thumbnail?id=1Z_X6c1CC5-eb-cZgQEQOiT-3ZZGFWhTV&sz=w1920' },
+    { num: 7,  timeStart: 43.74, timeEnd: 46.99, url: 'https://drive.google.com/thumbnail?id=1JYfAZGCcf91VqtBrctoFu56Bzt_Gk5Lo&sz=w1920' },
+    { num: 8,  timeStart: 46.99, timeEnd: 55.68, url: 'https://drive.google.com/thumbnail?id=1H6D-RC_RQMr-kJ56OxG0q1y8q-TlMPZ7&sz=w1920' },
+    { num: 9,  timeStart: 55.68, timeEnd: 61.34, url: 'https://drive.google.com/thumbnail?id=1Fm8hA_9CZM5EGiD2TsgVYkts4JYs1eM2&sz=w1920' },
+    { num: 10, timeStart: 61.34, timeEnd: 70.95, url: 'https://drive.google.com/thumbnail?id=1pL3uYbQ0AkEKXQC4N4hi5LLvXTMe61PT&sz=w1920' },
+    { num: 11, timeStart: 70.95, timeEnd: 78.91, url: 'https://drive.google.com/thumbnail?id=1xRL37rx_zB4X2p7jruanGmoYRmgUE52w&sz=w1920' },
+    { num: 12, timeStart: 78.91, timeEnd: 95.72, url: 'https://drive.google.com/thumbnail?id=1cUCvX_Z_uqkFC6zhgWOr5KYT6daZ2IPm&sz=w1920' },
+    { num: 13, timeStart: 95.72, timeEnd: 100.17, url: 'https://drive.google.com/thumbnail?id=1Jm7CHXiu-IcRAb-9lgmEAlDPwh5yPjtJ&sz=w1920' },
+    { num: 14, timeStart: 100.17, timeEnd: 102.30, url: 'https://drive.google.com/thumbnail?id=1PwNPxVX3nf2EpsB6oFlBx5XFgSJyYT3K&sz=w1920' },
+    { num: 15, timeStart: 102.30, timeEnd: 110.69, url: 'https://drive.google.com/thumbnail?id=1FpH2-B1CpM0U3Otp7b67QEytYnYgwvvt&sz=w1920' },
+    { num: 16, timeStart: 110.69, timeEnd: 999, url: 'https://drive.google.com/thumbnail?id=1cOH1Ni-U_9y_GsbIzVZFQk3l_OlmG9E4&sz=w1920' },
+  ];
 
   // Check if audio source is loaded
   function hasAudioSource() {
@@ -50,7 +75,17 @@
     return `${mm}:${ss}.${cs}`;
   }
 
-  // Update real-time lyric display and table highlight
+  // Get current image based on time
+  function getCurrentImage(time) {
+    for (const img of mvImages) {
+      if (time >= img.timeStart && time < img.timeEnd) {
+        return img;
+      }
+    }
+    return mvImages[0]; // fallback to first image
+  }
+
+  // Update real-time lyric display, table highlight, and MV image
   function updateCurrentLyric() {
     // If no audio source loaded, show hint and skip
     if (!hasAudioSource()) {
@@ -101,14 +136,26 @@
       rows.forEach(r => r.classList.remove('current'));
       activeRow.classList.add('current');
 
-      // Scroll only when changed (instant, not smooth)
-      activeRow.scrollIntoView({ behavior: 'auto', block: 'center' });
+      // NO auto-scroll - highlight stays in place
+      // activeRow.scrollIntoView({ behavior: 'auto', block: 'center' }); // REMOVED
 
       const lyricText = activeRow.querySelector('td:nth-child(2)').textContent || '';
       currentLyricText.textContent = lyricText;
 
       currentRowIndex = rows.indexOf(activeRow);
       lastActiveIndex = activeIndex;
+    }
+
+    // Update MV image based on time
+    const currentImg = getCurrentImage(currentTime);
+    if (lastImageIndex !== currentImg.num) {
+      if (mvImage && currentImg) {
+        mvImage.src = currentImg.url;
+        if (mvImageNum) {
+          mvImageNum.textContent = `圖 ${currentImg.num}/16`;
+        }
+        lastImageIndex = currentImg.num;
+      }
     }
   }
 
@@ -121,6 +168,7 @@
     marks = []; // Reset marks when new file loaded
     marksList.innerHTML = '';
     lastActiveIndex = -1; // Reset highlight state
+    lastImageIndex = -1;
   });
 
   // Audio timeupdate event for real-time highlighting
