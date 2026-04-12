@@ -18,17 +18,68 @@
     th { background: #f0f0f0; }
     .time { width: 60px; color: #666; font-size: 0.9rem; }
     .lyrics-text { white-space: pre-wrap; font-size: 1.05rem; line-height: 1.8; }
+
+    /* 播放器 */
     #player { margin: 12px 0; }
     audio { width: 100%; margin: 8px 0; }
     .controls { margin-top: 8px; }
     .controls button { margin-right: 8px; padding: 8px 12px; cursor: pointer; }
+
+    /* 實時歌詞顯示 */
+    #currentLyricDisplay {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1.3rem;
+      margin: 16px 0;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    #currentLyricDisplay .section-label {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+    #currentLyricDisplay .lyric-text {
+      font-weight: bold;
+    }
+
+    /* 歌詞表格加強 */
+    #lyricsTable { width: 100%; }
+    #lyricsTable tr { transition: background 0.2s; }
+    #lyricsTable tr:hover { background: #f0f0f0; }
+    #lyricsTable tr.current { background: #667eea !important; color: white; font-weight: bold; }
+    #lyricsTable tr.current .time { color: rgba(255,255,255,0.8); }
+    #lyricsTable tr.section-row { background: #f5f5f5; font-weight: bold; color: #555; }
+    #lyricsTable tr.section-row td { border-top: 2px solid #ddd; }
+
+    /* 扣針按鈕 */
+    .pin-btn {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: #888;
+      transition: all 0.2s;
+      margin-left: 8px;
+    }
+    .pin-btn:hover { background: #667eea; color: white; border-color: #667eea; }
+    .pin-btn.pinned { background: #667eea; color: white; border-color: #667eea; }
+
     footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #777; font-size: 0.9rem; }
   </style>
 </head>
 <body>
   <header>
     <h1>復活的光</h1>
-    <p class="meta">Tempo: 72 BPM • Key: G • Duration: ~3:15</p>
+    <p class="meta">Tempo: 72 BPM • Key: G • Duration: ~3:55</p>
   </header>
 
   <!-- 聚會得著（置頂） -->
@@ -43,9 +94,9 @@
 進入永遠愛的春天。</p>
   </section>
 
-  <!-- 歌詞 + 時間標記（合併表格） -->
+  <!-- 播放器 + 實時歌詞顯示 -->
   <section class="section">
-    <h2>🎵 歌詞與時間標記</h2>
+    <h2>🎵 播放器</h2>
 
     <!-- 音頻播放器 -->
     <div id="player">
@@ -56,59 +107,74 @@
       </audio>
       <p>或者上傳其他音訊檔：<input type="file" id="audioFile" accept="audio/*"></p>
       <div class="controls">
-        <button id="startMark">Start Marking</button>
-        <button id="mark">Mark Timestamp</button>
-        <button id="exportLRC">Export LRC</button>
+        <button id="startMark">🎯 開始標記</button>
+        <button id="mark">⏱ 標記時間</button>
+        <button id="exportLRC">📥 導出 LRC</button>
+        <button id="resetMarks">🔄 重置</button>
       </div>
     </div>
 
-    <!-- 歌詞表格 -->
+    <!-- 實時歌詞顯示 -->
+    <div id="currentLyricDisplay">
+      <div>
+        <div class="section-label">🎤 當前歌詞</div>
+        <div class="lyric-text" id="currentLyricText">按下播放開始...</div>
+      </div>
+    </div>
+
+    <!-- 歌詞表格（可編輯時間） -->
     <table>
       <thead>
-        <tr><th class="time">時間</th><th>歌詞</th></tr>
+        <tr><th class="time">時間</th><th>歌詞</th><th></th></tr>
       </thead>
       <tbody id="lyricsTable">
-        <tr><td class="time">0:00</td><td>【第一段】</td></tr>
-        <tr><td class="time">0:06</td><td>沉睡的大地</td></tr>
-        <tr><td class="time">0:12</td><td>萬物甦醒齊聲歡呼</td></tr>
-        <tr><td class="time">0:18</td><td>比你創立天地</td></tr>
-        <tr><td class="time">0:24</td><td>還要更大的喜樂</td></tr>
-        <tr><td class="time">0:30</td><td>你說有光就有光</td></tr>
-        <tr><td class="time">0:36</td><td>星辰節令為愛運轉</td></tr>
-        <tr><td class="time">0:42</td><td>一切都是你手所立</td></tr>
-        <tr><td class="time">0:48</td><td>只為今日這榮耀早晨</td></tr>
-        <tr><td class="time">0:54</td><td>【副歌】</td></tr>
-        <tr><td class="time">1:00</td><td>復活的主 你是我永恆的光</td></tr>
-        <tr><td class="time">1:06</td><td>黑暗尽散 充滿永遠的盼望</td></tr>
-        <tr><td class="time">1:12</td><td>你牽我離開那寒冷黑夜</td></tr>
-        <tr><td class="time">1:18</td><td>進入你永遠愛的春天</td></tr>
-        <tr><td class="time">1:24</td><td>【第二段】</td></tr>
-        <tr><td class="time">1:30</td><td>你用話語托住萬有</td></tr>
-        <tr><td class="time">1:36</td><td>你用慈愛編織宇宙</td></tr>
-        <tr><td class="time">1:42</td><td>復活的喜樂勝過起初</td></tr>
-        <tr><td class="time">1:48</td><td>新的創造 新的自由</td></tr>
-        <tr><td class="time">1:54</td><td>一切星辰都為你歡呼</td></tr>
-        <tr><td class="time">2:00</td><td>節令更迭述說你恩典</td></tr>
-        <tr><td class="time">2:06</td><td>萬物都在復活晨光中</td></tr>
-        <tr><td class="time">2:12</td><td>看見永遠愛的春天</td></tr>
-        <tr><td class="time">2:18</td><td>【副歌】</td></tr>
-        <tr><td class="time">2:24</td><td>復活的主 你是我永恆的光</td></tr>
-        <tr><td class="time">2:30</td><td>黑暗尽散 充滿永遠的盼望</td></tr>
-        <tr><td class="time">2:36</td><td>你牽我離開那寒冷黑夜</td></tr>
-        <tr><td class="time">2:42</td><td>進入你永遠愛的春天</td></tr>
-        <tr><td class="time">2:48</td><td>【橋段】</td></tr>
-        <tr><td class="time">2:54</td><td>永遠的愛 不變的應許</td></tr>
-        <tr><td class="time">3:00</td><td>你用復活開闘新天地</td></tr>
-        <tr><td class="time">3:06</td><td>我不再懼怕黑夜寒冬</td></tr>
-        <tr><td class="time">3:12</td><td>因你是我永恆的春天</td></tr>
-        <tr><td class="time">3:18</td><td>【終結副歌】</td></tr>
-        <tr><td class="time">3:24</td><td>復活的主 你是我永恆的光</td></tr>
-        <tr><td class="time">3:30</td><td>黑暗尽散 充滿永遠的盼望</td></tr>
-        <tr><td class="time">3:36</td><td>你牽我離開那寒冷黑夜</td></tr>
-        <tr><td class="time">3:42</td><td>進入你永遠愛的春天</td></tr>
-        <tr><td class="time">3:48</td><td>永遠愛的春天</td></tr>
+        <tr data-time="0.00" class="section-row"><td class="time">0:00</td><td>【第一段】</td><td></td></tr>
+        <tr data-time="6.00"><td class="time">0:06</td><td>沉睡的大地</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="12.00"><td class="time">0:12</td><td>萬物甦醒齊聲歡呼</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="18.00"><td class="time">0:18</td><td>比你創立天地</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="24.00"><td class="time">0:24</td><td>還要更大的喜樂</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="30.00"><td class="time">0:30</td><td>你說有光就有光</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="36.00"><td class="time">0:36</td><td>星辰節令為愛運轉</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="42.00"><td class="time">0:42</td><td>一切都是你手所立</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="48.00"><td class="time">0:48</td><td>只為今日這榮耀早晨</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="54.00" class="section-row"><td class="time">0:54</td><td>【副歌】</td><td></td></tr>
+        <tr data-time="60.00"><td class="time">1:00</td><td>復活的主 你是我永恆的光</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="66.00"><td class="time">1:06</td><td>黑暗尽散 充滿永遠的盼望</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="72.00"><td class="time">1:12</td><td>你牽我離開那寒冷黑夜</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="78.00"><td class="time">1:18</td><td>進入你永遠愛的春天</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="84.00" class="section-row"><td class="time">1:24</td><td>【第二段】</td><td></td></tr>
+        <tr data-time="90.00"><td class="time">1:30</td><td>你用話語托住萬有</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="96.00"><td class="time">1:36</td><td>你用慈愛編織宇宙</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="102.00"><td class="time">1:42</td><td>復活的喜樂勝過起初</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="108.00"><td class="time">1:48</td><td>新的創造 新的自由</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="114.00"><td class="time">1:54</td><td>一切星辰都為你歡呼</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="120.00"><td class="time">2:00</td><td>節令更迭述說你恩典</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="126.00"><td class="time">2:06</td><td>萬物都在復活晨光中</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="132.00"><td class="time">2:12</td><td>看見永遠愛的春天</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="138.00" class="section-row"><td class="time">2:18</td><td>【副歌】</td><td></td></tr>
+        <tr data-time="144.00"><td class="time">2:24</td><td>復活的主 你是我永恆的光</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="150.00"><td class="time">2:30</td><td>黑暗尽散 充滿永遠的盼望</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="156.00"><td class="time">2:36</td><td>你牽我離開那寒冷黑夜</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="162.00"><td class="time">2:42</td><td>進入你永遠愛的春天</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="168.00" class="section-row"><td class="time">2:48</td><td>【橋段】</td><td></td></tr>
+        <tr data-time="174.00"><td class="time">2:54</td><td>永遠的愛 不變的應許</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="180.00"><td class="time">3:00</td><td>你用復活開闘新天地</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="186.00"><td class="time">3:06</td><td>我不再懼怕黑夜寒冬</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="192.00"><td class="time">3:12</td><td>因你是我永恆的春天</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="198.00" class="section-row"><td class="time">3:18</td><td>【終結副歌】</td><td></td></tr>
+        <tr data-time="204.00"><td class="time">3:24</td><td>復活的主 你是我永恆的光</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="210.00"><td class="time">3:30</td><td>黑暗尽散 充滿永遠的盼望</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="216.00"><td class="time">3:36</td><td>你牽我離開那寒冷黑夜</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="222.00"><td class="time">3:42</td><td>進入你永遠愛的春天</td><td><button class="pin-btn">📌 扣</button></td></tr>
+        <tr data-time="228.00"><td class="time">3:48</td><td>永遠愛的春天</td><td><button class="pin-btn">📌 扣</button></td></tr>
       </tbody>
     </table>
+
+    <!-- 標記列表 -->
+    <div style="margin-top: 16px;">
+      <h3>⏱ 已標記時間</h3>
+      <ul id="marksList" style="list-style: none; padding: 0;"></ul>
+    </div>
   </section>
 
   <!-- 聖經參考（最底部，按章節排序） -->
