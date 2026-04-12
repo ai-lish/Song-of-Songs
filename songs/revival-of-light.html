@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>復活的光 — Song of Songs</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>復活的光</h1>
+    <p class="meta">Tempo: 72 BPM • Key: G • Duration: ~3:15</p>
+  </header>
+  <main>
+    <section id="player">
+      <p>載入音訊檔（mp3/wav）以啟用時間標記功能：</p>
+      <input type="file" id="audioFile" accept="audio/*">
+      <audio id="audio" controls></audio>
+      <div class="controls">
+        <button id="startMark">Start Marking</button>
+        <button id="mark">Mark Timestamp</button>
+        <button id="exportLRC">Export LRC</button>
+      </div>
+    </section>
+
+    <section id="lyrics">
+      <pre id="lyricsText">
+沉睡的大地
+萬物甦醒齊聲歡呼
+比你創立天地
+還要更大的喜樂
+你說有光就有光
+星辰節令為愛運轉
+一切都是你手所立
+只為今日這榮耀早晨
+
+副歌：
+復活的主 你是我永恆的光
+黑暗尽散 充滿永遠的盼望
+你牽我離開那寒冷黑夜
+進入你永遠愛的春天
+
+你用話語托住萬有
+你用慈愛編織宇宙
+復活的喜樂勝過起初
+新的創造 新的自由
+一切星辰都為你歡呼
+節令更迭訴說你恩典
+萬物都在復活晨光中
+看見永遠愛的春天
+
+副歌：
+復活的主 你是我永恆的光
+黑暗尽散 充滿永遠的盼望
+你牽我離開那寒冷黑夜
+進入你永遠愛的春天
+
+橋段：
+永遠的愛 不變的應許
+你用復活開闢新天地
+我不再懼怕黑夜寒冬
+因你是我永恆的春天
+
+副歌（終結）：
+復活的主 你是我永恆的光
+黑暗尽散 充滿永遠的盼望
+你牽我離開那寒冷黑夜
+進入你永遠愛的春天
+永遠愛的春天
+      </pre>
+    </section>
+
+    <section id="marks">
+      <h3>Marked timestamps</h3>
+      <ol id="marksList"></ol>
+    </section>
+  </main>
+
+  <script src="../assets/js/lyrics-timeline.js"></script>
+</body>
+</html>

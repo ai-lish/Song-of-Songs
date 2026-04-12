@@ -1,0 +1,12 @@
+/* basic styles for Song-of-Songs */
+body{font-family: 'Noto Sans TC', 'PingFang TC', sans-serif;margin:24px;color:#222;background:#fff}
+header h1{margin:0 0 6px 0}
+.meta{color:#666;font-size:0.95rem}
+.songs-list ul{list-style:none;padding-left:0}
+.songs-list li{margin:6px 0}
+pre{white-space:pre-wrap;font-size:1.05rem;line-height:1.6;background:#fbfbfb;padding:12px;border-radius:6px;border:1px solid #eee}
+#player{margin:12px 0}
+.controls button{margin-right:8px;padding:8px 10px}
+#marks{margin-top:16px}
+#marksList li{margin-bottom:6px}
+footer{margin-top:30px;color:#777}

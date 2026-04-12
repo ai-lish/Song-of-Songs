@@ -1,0 +1,18 @@
+{
+  "generated_at": "2026-04-12",
+  "raw_lyrics_source": "萬物都要因你復活歡呼🎉比創立天地更讓萬物高興。萬有都是你做，你說有光就有光，星辰、節令都是你所立，一切都為你復活預備。你帶我離開黑夜、寒冬，進入永遠愛的春天。",
+  "language": "Mandarin (普通話)",
+  "use_case": "Communion worship song (擘餅聚會)",
+  "style": "溫暖、莊嚴、復活、春天、光明",
+  "structure": "Verse 1 → Chorus → Verse 2 → Chorus → Bridge → Chorus (ending)",
+  "tempo_suggestion": "中等偏慢 (72-80 BPM)",
+  "key_suggestion": "G大調 或 C大調",
+  "meter": "4/4",
+  "vocal_style": "溫暖而有力量的男女合唱，女聲柔和溫暖，男聲莊嚴有力，副歌時可加入和聲",
+  "instrumentation": "鋼琴為主，配合弦樂與木吉他，尾聲可加入鐘聲共鳴",
+  "summary": "一首復活主題的詩歌，講述基督復活帶來的光明與永遠的春天，引領信徒離開黑夜寒冬，進入神的永恆之愛。",
+  "model": "MiniMax-M2.7",
+  "temperature": 0.8,
+  "tokens_used": 1482,
+  "status": "success"
+}
