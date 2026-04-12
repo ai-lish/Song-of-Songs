@@ -13,9 +13,12 @@
   </header>
   <main>
     <section id="player">
-      <p>載入音訊檔（mp3/wav）以啟用時間標記功能：</p>
-      <input type="file" id="audioFile" accept="audio/*">
-      <audio id="audio" controls></audio>
+      <audio id="audio" controls>
+        <source src="../assets/audio/revival-of-light.mp3" type="audio/mpeg">
+        <source src="../assets/audio/revival-of-light.mp3" type="audio/mp3">
+        你的瀏覽器不支援音訊播放。
+      </audio>
+      <p>或者上傳其他音訊檔：<input type="file" id="audioFile" accept="audio/*"></p>
       <div class="controls">
         <button id="startMark">Start Marking</button>
         <button id="mark">Mark Timestamp</button>
