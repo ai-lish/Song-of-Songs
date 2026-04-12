@@ -27,22 +27,22 @@
 
   // MV Image URLs (16 images mapped to time ranges)
   const mvImages = [
-    { num: 1,  timeStart: 0,   timeEnd: 13.51,  url: 'https://drive.google.com/thumbnail?id=1myFrILUI4kYwb1LnDgPHzzBKWFqJkP-m&sz=w1920' },
-    { num: 2,  timeStart: 13.51, timeEnd: 20.18, url: 'https://drive.google.com/thumbnail?id=1EOwdJxREgJWyuEmvrznz24Z0aGCJNx55&sz=w1920' },
-    { num: 3,  timeStart: 20.18, timeEnd: 26.28, url: 'https://drive.google.com/thumbnail?id=18eFW2KDfW2Gn66t8YZoI21evQuBSXyS-&sz=w1920' },
-    { num: 4,  timeStart: 26.28, timeEnd: 32.05, url: 'https://drive.google.com/thumbnail?id=1FLRaV6Du450SHS1qFnO3oHI-sg55j8k_&sz=w1920' },
-    { num: 5,  timeStart: 32.05, timeEnd: 38.86, url: 'https://drive.google.com/thumbnail?id=1s8yqFGy_41yCeFpARPnbFLx9F4sUp_tf&sz=w1920' },
-    { num: 6,  timeStart: 38.86, timeEnd: 43.74, url: 'https://drive.google.com/thumbnail?id=1Z_X6c1CC5-eb-cZgQEQOiT-3ZZGFWhTV&sz=w1920' },
-    { num: 7,  timeStart: 43.74, timeEnd: 46.99, url: 'https://drive.google.com/thumbnail?id=1JYfAZGCcf91VqtBrctoFu56Bzt_Gk5Lo&sz=w1920' },
-    { num: 8,  timeStart: 46.99, timeEnd: 55.68, url: 'https://drive.google.com/thumbnail?id=1H6D-RC_RQMr-kJ56OxG0q1y8q-TlMPZ7&sz=w1920' },
-    { num: 9,  timeStart: 55.68, timeEnd: 61.34, url: 'https://drive.google.com/thumbnail?id=1Fm8hA_9CZM5EGiD2TsgVYkts4JYs1eM2&sz=w1920' },
-    { num: 10, timeStart: 61.34, timeEnd: 70.95, url: 'https://drive.google.com/thumbnail?id=1pL3uYbQ0AkEKXQC4N4hi5LLvXTMe61PT&sz=w1920' },
-    { num: 11, timeStart: 70.95, timeEnd: 78.91, url: 'https://drive.google.com/thumbnail?id=1xRL37rx_zB4X2p7jruanGmoYRmgUE52w&sz=w1920' },
-    { num: 12, timeStart: 78.91, timeEnd: 95.72, url: 'https://drive.google.com/thumbnail?id=1cUCvX_Z_uqkFC6zhgWOr5KYT6daZ2IPm&sz=w1920' },
-    { num: 13, timeStart: 95.72, timeEnd: 100.17, url: 'https://drive.google.com/thumbnail?id=1Jm7CHXiu-IcRAb-9lgmEAlDPwh5yPjtJ&sz=w1920' },
-    { num: 14, timeStart: 100.17, timeEnd: 102.30, url: 'https://drive.google.com/thumbnail?id=1PwNPxVX3nf2EpsB6oFlBx5XFgSJyYT3K&sz=w1920' },
-    { num: 15, timeStart: 102.30, timeEnd: 110.69, url: 'https://drive.google.com/thumbnail?id=1FpH2-B1CpM0U3Otp7b67QEytYnYgwvvt&sz=w1920' },
-    { num: 16, timeStart: 110.69, timeEnd: 999, url: 'https://drive.google.com/thumbnail?id=1cOH1Ni-U_9y_GsbIzVZFQk3l_OlmG9E4&sz=w1920' },
+    { num: 1,  timeStart: 0,    timeEnd: 13.51, url: '../assets/mv/mv-01.png' },
+    { num: 2,  timeStart: 13.51, timeEnd: 20.18, url: '../assets/mv/mv-02.png' },
+    { num: 3,  timeStart: 20.18, timeEnd: 26.28, url: '../assets/mv/mv-03.png' },
+    { num: 4,  timeStart: 26.28, timeEnd: 32.05, url: '../assets/mv/mv-04.png' },
+    { num: 5,  timeStart: 32.05, timeEnd: 38.86, url: '../assets/mv/mv-05.png' },
+    { num: 6,  timeStart: 38.86, timeEnd: 43.74, url: '../assets/mv/mv-06.png' },
+    { num: 7,  timeStart: 43.74, timeEnd: 46.99, url: '../assets/mv/mv-07.png' },
+    { num: 8,  timeStart: 46.99, timeEnd: 55.68, url: '../assets/mv/mv-08.png' },
+    { num: 9,  timeStart: 55.68, timeEnd: 61.34, url: '../assets/mv/mv-09.png' },
+    { num: 10, timeStart: 61.34, timeEnd: 70.95, url: '../assets/mv/mv-10.png' },
+    { num: 11, timeStart: 70.95, timeEnd: 78.91, url: '../assets/mv/mv-11.png' },
+    { num: 12, timeStart: 78.91, timeEnd: 95.72, url: '../assets/mv/mv-12.png' },
+    { num: 13, timeStart: 95.72, timeEnd: 100.17, url: '../assets/mv/mv-13.png' },
+    { num: 14, timeStart: 100.17, timeEnd: 102.30, url: '../assets/mv/mv-14.png' },
+    { num: 15, timeStart: 102.30, timeEnd: 110.69, url: '../assets/mv/mv-15.png' },
+    { num: 16, timeStart: 110.69, timeEnd: 999, url: '../assets/mv/mv-16.png' },
   ];
 
   // Check if audio source is loaded
