@@ -87,7 +87,19 @@
 
   // Update real-time lyric display, table highlight, and MV image
   function updateCurrentLyric() {
-    // If no audio source loaded, show hint and skip
+    // Always update MV image, even without audio
+    const img = getCurrentImage(audio.currentTime || 0);
+    if (lastImageIndex !== img.num) {
+      if (mvImage && img) {
+        mvImage.src = img.url;
+        if (mvImageNum) {
+          mvImageNum.textContent = `圖 ${img.num}/16`;
+        }
+        lastImageIndex = img.num;
+      }
+    }
+
+    // If no audio source loaded, show hint and skip lyric updates
     if (!hasAudioSource()) {
       currentLyricText.textContent = '按下播放開始...';
       return;
@@ -146,17 +158,7 @@
       lastActiveIndex = activeIndex;
     }
 
-    // Update MV image based on time
-    const currentImg = getCurrentImage(currentTime);
-    if (lastImageIndex !== currentImg.num) {
-      if (mvImage && currentImg) {
-        mvImage.src = currentImg.url;
-        if (mvImageNum) {
-          mvImageNum.textContent = `圖 ${currentImg.num}/16`;
-        }
-        lastImageIndex = currentImg.num;
-      }
-    }
+    // MV image already updated at the top of this function
   }
 
   // Set up audio file input
